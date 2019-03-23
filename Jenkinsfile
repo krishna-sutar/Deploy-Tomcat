@@ -3,9 +3,11 @@ node{
      git 'https://github.com/krishna-sutar/Deploy-Tomcat.git'
 	 }
 	 stage('compile Package') {
-	    //get maven Home Path
-	    def mvnhome = tool name: 'LocalMaven' type: 'maven'
-        sh "${mvnhome}/bin/mvn package"
+		 steps {
+			 withmaven (maven: 'LocalMaven') {
+				 sh 'mvn clean compile'
+			 }
+		 }
 	 }
 	 stage('deploy to Tomcat') {
 	     
@@ -13,4 +15,5 @@ node{
 		     sh 'scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.17.114:/usr/share/tomcat/webapps'
 	     }
 	}
+}
 	
